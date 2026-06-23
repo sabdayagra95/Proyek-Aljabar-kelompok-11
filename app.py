@@ -704,4 +704,108 @@ elif active == "bandingkan":
 |---|---|
 | Sumber model | {st.session_state.get('model_source','—')} |
 | Komponen PCA (k) | {pca_m.n_components_} |
-|
+| Dimensi asli | {IMG_SIZE[0]*IMG_SIZE[1]} px |
+| Dimensi setelah PCA | {k - sk} |
+| PC di-skip | {sk} |
+| z₁ (5 pertama) | `{z1[:5].round(4).tolist()}` |
+| z₂ (5 pertama) | `{z2[:5].round(4).tolist()}` |
+                """)
+
+            try: os.unlink(p1); os.unlink(p2)
+            except: pass
+
+
+# ════════════════════════════════════════════════
+#  TAB: KENALI DARI DATABASE
+# ════════════════════════════════════════════════
+elif active == "kenali":
+    st.markdown('<div style="font-family:JetBrains Mono,monospace;font-size:0.68rem;color:#4b5563;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;">RECOGNIZE</div>', unsafe_allow_html=True)
+    st.markdown('<div style="font-size:1.3rem;font-weight:700;color:#e5e7eb;margin-bottom:24px;letter-spacing:-0.02em;">Kenali Wajah dari Database</div>', unsafe_allow_html=True)
+
+    if "pca_model" not in st.session_state:
+        st.warning("Latih model terlebih dahulu di menu Latih Model.")
+        st.stop()
+
+    pca_m = st.session_state["pca_model"]
+    mf    = st.session_state["mean_face"]
+
+    st.markdown('<div style="font-size:0.83rem;color:#4b5563;margin-bottom:20px;">Upload foto database (nama file = label orang), lalu upload satu foto query.</div>', unsafe_allow_html=True)
+
+    kc1, kc2 = st.columns(2, gap="large")
+    with kc1:
+        st.markdown('<div style="font-size:0.75rem;color:#6b7280;margin-bottom:6px;">Foto Database</div>', unsafe_allow_html=True)
+        db_files = st.file_uploader("Database", type=["jpg","jpeg","png"],
+                                    accept_multiple_files=True, key="recog_db",
+                                    label_visibility="collapsed")
+    with kc2:
+        st.markdown('<div style="font-size:0.75rem;color:#6b7280;margin-bottom:6px;">Foto Query</div>', unsafe_allow_html=True)
+        qf = st.file_uploader("Query", type=["jpg","jpeg","png"], key="recog_query",
+                              label_visibility="collapsed")
+
+    if db_files and qf:
+        st.markdown("<br>", unsafe_allow_html=True)
+        btn_c = st.columns([2, 1, 2])
+        with btn_c[1]:
+            run_r = st.button("Kenali", key="run_recog", use_container_width=True)
+
+        if run_r:
+            with st.spinner("Memproses..."):
+                db_entries = []
+                for uf in db_files:
+                    pt = save_uploaded_to_temp(uf)
+                    vec, face, pil, ok, msg = detect_face_preprocess(pt)
+                    label = os.path.splitext(uf.name)[0]
+                    if ok:
+                        zf  = pca_m.transform((vec - mf).reshape(1, -1))[0]
+                        sk  = min(pc_skip, len(zf) - 2)
+                        z   = zf[sk:]
+                        db_entries.append({"label": label, "z": z, "face": face})
+                    try: os.unlink(pt)
+                    except: pass
+
+                pq = save_uploaded_to_temp(qf)
+                vq, fq, pq_img, okq, msgq = detect_face_preprocess(pq)
+                try: os.unlink(pq)
+                except: pass
+
+            if not okq:
+                st.error(f"Wajah tidak terdeteksi di foto query: {msgq}")
+                st.stop()
+            if not db_entries:
+                st.error("Tidak ada wajah terdeteksi di database.")
+                st.stop()
+
+            zqf = pca_m.transform((vq - mf).reshape(1, -1))[0]
+            sk  = min(pc_skip, len(zqf) - 2)
+            zq  = zqf[sk:]
+
+            results = sorted(
+                [(cosine_similarity(zq, e["z"]), e) for e in db_entries],
+                key=lambda x: x[0], reverse=True
+            )
+
+            st.markdown('<hr style="border-color:#141414;margin:24px 0;">', unsafe_allow_html=True)
+
+            rq1, rq2 = st.columns([1, 3], gap="large")
+            rq1.image(pq_img, caption="Query", use_container_width=True)
+            best_sim, best_e = results[0]
+            if best_sim >= threshold_cos:
+                rq2.success(f"Dikenali sebagai **{best_e['label']}** — skor {best_sim:.4f}")
+            else:
+                rq2.error(f"Tidak ada yang cukup mirip. Skor tertinggi: {best_sim:.4f} ({best_e['label']})")
+
+            st.markdown('<div style="font-size:0.75rem;color:#4b5563;margin:24px 0 12px;">Ranking Kemiripan</div>', unsafe_allow_html=True)
+            for rank, (sv, entry) in enumerate(results[:5], 1):
+                r1, r2, r3, r4 = st.columns([1, 2, 4, 1], gap="small")
+                r1.image(entry["face"], use_container_width=True, clamp=True)
+                r2.markdown(f'<div style="font-size:0.72rem;color:#374151;font-family:JetBrains Mono,monospace;padding-top:4px;">#{rank}</div>'
+                            f'<div style="font-size:0.85rem;color:#e5e7eb;font-weight:600;">{entry["label"]}</div>',
+                            unsafe_allow_html=True)
+                r3.progress(float(max(0, sv)))
+                verdict_t = "MIRIP" if sv >= threshold_cos else "—"
+                r4.metric("", f"{sv:.4f}", delta=verdict_t)
+    else:
+        if not db_files:
+            st.markdown('<div style="font-size:0.8rem;color:#374151;">Upload foto database terlebih dahulu.</div>', unsafe_allow_html=True)
+        if not qf:
+            st.markdown('<div style="font-size:0.8rem;color:#374151;">Upload foto query yang ingin dikenali.</div>', unsafe_allow_html=True)
