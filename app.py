@@ -25,11 +25,11 @@ st.set_page_config(
 )
 
 # ──────────────────────────────────────────────
-#  CSS — Sleek Black, no sidebar native
+#  CSS — Sleek Black, Guarded Edges
 # ──────────────────────────────────────────────
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght=300;400;500;600;700;800&family=JetBrains+Mono:wght=400;500&display=swap');
 
 /* ── Reset & Base ── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -54,7 +54,7 @@ section[data-testid="stSidebarContent"] { display: none !important; }
 [data-testid="stDecoration"] { display: none !important; }
 .stDeployButton { display: none !important; }
 
-/* ── Main content padding (TIDAK SEBECEK SEBELUMNYA GAK NEMPEL EDGE) ── */
+/* ── Main content padding (Safe Edge Room) ── */
 .block-container {
     padding: 16px 48px 60px 48px !important;
     max-width: 100% !important;
@@ -74,35 +74,6 @@ section[data-testid="stSidebarContent"] { display: none !important; }
     padding: 0 48px;
     height: 60px;
 }
-.navbar-brand {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 1.05rem;
-    font-weight: 500;
-    color: #ffffff;
-    letter-spacing: 0.02em;
-}
-.navbar-brand span { color: #6366f1; }
-.navbar-links {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-}
-.nav-btn {
-    background: transparent;
-    border: none;
-    color: #6b7280;
-    font-family: 'Inter', sans-serif;
-    font-size: 0.82rem;
-    font-weight: 500;
-    letter-spacing: 0.03em;
-    padding: 6px 16px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.15s;
-    text-transform: uppercase;
-}
-.nav-btn:hover { color: #e5e7eb; background: #141414; }
-.nav-btn.active { color: #ffffff; background: #141414; }
 
 /* ── Custom Trigger Button Style ── */
 div[data-testid="stBlock"] button[key="sidebar_trigger"] {
@@ -114,49 +85,6 @@ div[data-testid="stBlock"] button[key="sidebar_trigger"] {
     margin-top: -4px !important;
 }
 
-/* ── Page wrapper ── */
-.page-wrap {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 48px 32px 80px;
-}
-
-/* ── Hero ── */
-.hero {
-    padding: 64px 0 48px;
-    border-bottom: 1px solid #141414;
-    margin-bottom: 48px;
-}
-.hero-eyebrow {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.72rem;
-    font-weight: 500;
-    color: #6366f1;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    margin-bottom: 20px;
-}
-.hero-title {
-    font-size: clamp(2.2rem, 5vw, 3.4rem);
-    font-weight: 800;
-    color: #ffffff;
-    line-height: 1.1;
-    letter-spacing: -0.03em;
-    margin-bottom: 20px;
-}
-.hero-title em {
-    font-style: normal;
-    color: transparent;
-    -webkit-text-stroke: 1px #6366f1;
-}
-.hero-sub {
-    font-size: 0.95rem;
-    color: #6b7280;
-    line-height: 1.7;
-    max-width: 560px;
-}
-.hero-sub strong { color: #9ca3af; font-weight: 500; }
-
 /* ── Cards ── */
 .card {
     background: #0d0d0d;
@@ -165,23 +93,11 @@ div[data-testid="stBlock"] button[key="sidebar_trigger"] {
     padding: 24px;
     margin-bottom: 16px;
 }
-.card-sm {
-    background: #0d0d0d;
-    border: 1px solid #1a1a1a;
-    border-radius: 8px;
-    padding: 16px 20px;
-}
 
 /* ── Streamlit widget overrides ── */
-[data-testid="stSlider"] {
-    padding: 0 !important;
-}
-[data-testid="stSlider"] > div > div > div > div {
-    background: #6366f1 !important;
-}
-[data-testid="stSlider"] label {
-    display: none !important;
-}
+[data-testid="stSlider"] { padding: 0 !important; }
+[data-testid="stSlider"] > div > div > div > div { background: #6366f1 !important; }
+[data-testid="stSlider"] label { display: none !important; }
 [data-testid="stNumberInput"] input,
 [data-testid="stTextInput"] input {
     background: #111 !important;
@@ -217,11 +133,9 @@ div[data-testid="stBlock"] button[key="sidebar_trigger"] {
     border-radius: 8px !important;
     transition: border-color 0.2s;
 }
-[data-testid="stFileUploadDropzone"]:hover {
-    border-color: #6366f1 !important;
-}
+[data-testid="stFileUploadDropzone"]:hover { border-color: #6366f1 !important; }
 
-/* ── Verdict ── */
+/* ── Verdict Boxes ── */
 .verdict-wrap {
     border-radius: 10px;
     padding: 28px 32px;
@@ -230,40 +144,37 @@ div[data-testid="stBlock"] button[key="sidebar_trigger"] {
 }
 .verdict-mirip  { background: #040e07; border: 1px solid #14532d; }
 .verdict-tidak  { background: #100404; border: 1px solid #450a0a; }
-.verdict-label  { font-size: 0.7rem; font-family: 'JetBrains Mono', monospace;
-                  letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 6px; }
+.verdict-label  { font-size: 0.7rem; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 6px; }
 .verdict-label.m { color: #4ade80; }
 .verdict-label.t { color: #f87171; }
-.verdict-score  { font-family: 'JetBrains Mono', monospace; font-size: 3rem;
-                  font-weight: 700; letter-spacing: -0.02em; margin-bottom: 4px; }
+.verdict-score  { font-family: 'JetBrains Mono', monospace; font-size: 3rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 4px; }
 .verdict-score.m { color: #4ade80; }
 .verdict-score.t { color: #f87171; }
-.verdict-meta   { font-size: 0.75rem; color: #374151; font-family: 'JetBrains Mono', monospace; }
+.verdict-meta   { font-size: 0.75rem; color: #4b5563; font-family: 'JetBrains Mono', monospace; }
 
-/* ── Progress bar ── */
 [data-testid="stProgressBar"] > div > div { background: #6366f1 !important; }
 hr { border: none; border-top: 1px solid #141414; margin: 32px 0; }
 </style>
 """, unsafe_allow_html=True)
 
 # ──────────────────────────────────────────────
-#  SESSION STATE
+#  SESSION STATE (Pembaruan Threshold & Default)
 # ──────────────────────────────────────────────
 if "active_tab" not in st.session_state:
     st.session_state.active_tab = "latih"
 if "sidebar_open" not in st.session_state:
     st.session_state.sidebar_open = False
 if "n_components" not in st.session_state:
-    st.session_state.n_components = 50
+    st.session_state.n_components = 60
 if "threshold_cos" not in st.session_state:
-    st.session_state.threshold_cos = 0.60
+    st.session_state.threshold_cos = 0.80  # Diperketat dari 0.60 ke 0.80
 if "pc_skip" not in st.session_state:
-    st.session_state.pc_skip = 3
+    st.session_state.pc_skip = 0  # Default ke 0 karena kita memakai Whitening
 
 IMG_SIZE = (100, 100)
 
 # ──────────────────────────────────────────────
-#  NAVBAR (DIPERBARUI DENGAN TRIGGER LOGO)
+#  NAVBAR (Trigger Logo)
 # ──────────────────────────────────────────────
 col_nav = st.columns([2.5, 5.5, 2])
 with col_nav[0]:
@@ -274,7 +185,7 @@ with col_nav[0]:
             st.rerun()
     with c_logo:
         st.markdown("""
-        <div style="padding: 10px 0 0 0; select: none;">
+        <div style="padding: 10px 0 0 0; user-select: none;">
             <span style="font-family:'JetBrains Mono',monospace;font-size:1rem;font-weight:500;color:#fff;">
                 Face<span style="color:#6366f1;">Vec</span>
             </span>
@@ -297,7 +208,6 @@ with col_nav[1]:
             st.rerun()
 
 with col_nav[2]:
-    # Menampilkan info ringkas parameter aktif secara rapi di kanan navbar
     st.markdown(f"""
     <div style="text-align: right; padding-top: 12px; font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: #4b5563;">
         k={st.session_state.n_components} | thr={st.session_state.threshold_cos:.2f}
@@ -307,7 +217,7 @@ with col_nav[2]:
 st.markdown('<hr style="margin:8px 0 0 0; border-color:#1e1e1e;">', unsafe_allow_html=True)
 
 # ──────────────────────────────────────────────
-#  UTILITAS & PLOT HELPERS
+#  UTILITAS & ALGORITMA (Whiten=True Diaktifkan)
 # ──────────────────────────────────────────────
 def save_uploaded_to_temp(uploaded_file) -> str:
     suffix = os.path.splitext(uploaded_file.name)[1]
@@ -322,9 +232,9 @@ def detect_face_preprocess(path: str):
     pil_img  = Image.open(path)
     img_gray = cv2.cvtColor(img_cv, cv2.COLOR_BGR2GRAY)
     cascade  = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
-    faces = cascade.detectMultiScale(img_gray, 1.1, 5, minSize=(30, 30))
+    faces = cascade.detectMultiScale(img_gray, 1.1, 5, minSize=(40, 40))
     if len(faces) == 0:
-        return None, None, pil_img, False, "Wajah tidak terdeteksi. Gunakan foto menghadap ke depan."
+        return None, None, pil_img, False, "Wajah tidak terdeteksi. Pastikan wajah tegak lurus."
     x, y, w, h   = faces[0]
     face_gray     = img_gray[y:y+h, x:x+w]
     face_resized  = cv2.resize(face_gray, IMG_SIZE)
@@ -356,7 +266,8 @@ def load_lfw_pca(n_comp: int):
     lfw = fetch_lfw_people(min_faces_per_person=10, resize=0.4, color=False)
     X   = np.array([cv2.resize(img, IMG_SIZE).flatten() / 255.0 for img in lfw.images])
     mf  = np.mean(X, axis=0)
-    pca = SklearnPCA(n_components=n_comp)
+    # whiten=True memaksa model menghitung variasi esensial fitur wajah (bukan cahaya)
+    pca = SklearnPCA(n_components=n_comp, whiten=True)
     pca.fit(X - mf)
     return pca, mf, X.shape[0]
 
@@ -370,7 +281,7 @@ def train_custom_pca(images_gray: list, n_comp: int):
     X   = np.array(vecs)
     mf  = np.mean(X, axis=0)
     k   = min(n_comp, X.shape[0] - 1)
-    pca = SklearnPCA(n_components=k)
+    pca = SklearnPCA(n_components=k, whiten=True)
     pca.fit(X - mf)
     return pca, mf, X.shape[0]
 
@@ -445,7 +356,7 @@ def fig_proj(z1, z2, l1, l2):
     return fig
 
 # ──────────────────────────────────────────────
-#  SIDEBAR LOGIC & LAYOUT SPLITTING
+#  SIDEBAR LOGIC
 # ──────────────────────────────────────────────
 if st.session_state.sidebar_open:
     col_sidebar, col_content = st.columns([1, 3.2], gap="large")
@@ -470,7 +381,7 @@ if st.session_state.sidebar_open:
             st.session_state.threshold_cos = new_thr
             st.rerun()
 
-        st.markdown(f'<div style="font-size:0.78rem;color:#9ca3af;margin-bottom:4px;margin-top:16px;">PC Skip (pencahayaan) &nbsp;<span style="font-family:JetBrains Mono,monospace;color:#6366f1;">{st.session_state.pc_skip}</span></div>', unsafe_allow_html=True)
+        st.markdown(f'<div style="font-size:0.78rem;color:#9ca3af;margin-bottom:4px;margin-top:16px;">PC Skip (Cahaya) &nbsp;<span style="font-family:JetBrains Mono,monospace;color:#6366f1;">{st.session_state.pc_skip}</span></div>', unsafe_allow_html=True)
         new_skip = st.slider("skip", 0, 10, st.session_state.pc_skip, 1, label_visibility="collapsed", key="sd_skip")
         if new_skip != st.session_state.pc_skip:
             st.session_state.pc_skip = new_skip
@@ -478,7 +389,7 @@ if st.session_state.sidebar_open:
 else:
     col_content = st.container()
 
-# Ambil nilai parameter aktif
+# Parameter aktif
 n_components  = st.session_state.n_components
 threshold_cos = st.session_state.threshold_cos
 pc_skip       = st.session_state.pc_skip
@@ -489,53 +400,39 @@ pc_skip       = st.session_state.pc_skip
 with col_content:
     active = st.session_state.active_tab
 
-    # Hero Section
     st.markdown("""
     <div style="padding: 40px 0 32px;">
         <div style="font-family:'JetBrains Mono',monospace;font-size:0.68rem; color:#6366f1;letter-spacing:0.12em;text-transform:uppercase; margin-bottom:16px;">
-            PCA / SVD — Eigenfaces
+            PCA / SVD — Eigenfaces dengan Whitening
         </div>
         <div style="font-size:clamp(1.8rem,4vw,2.6rem);font-weight:800;color:#fff; line-height:1.2;letter-spacing:-0.03em;margin-bottom:16px;">
             Deteksi Kemiripan<br>
-            <span style="color:transparent;-webkit-text-stroke:1px #6366f1;">Wajah</span>
-            &nbsp;secara Matematis
-        </div>
-        <div style="font-size:0.88rem;color:#6b7280;line-height:1.7;max-width:520px;">
-            Setiap wajah diproyeksikan ke <strong style="color:#9ca3af;">eigenspace</strong> dan kemiripannya dihitung via <strong style="color:#9ca3af;">Cosine Similarity</strong>. 10.000 piksel diubah menjadi <strong style="color:#6366f1;">k dimensi</strong>.
+            <span style="color:transparent;-webkit-text-stroke:1px #6366f1;">Wajah</span> Berbasis Vektor
         </div>
     </div>
     """, unsafe_allow_html=True)
 
     st.markdown('<hr style="border-color:#141414;margin-bottom:32px;">', unsafe_allow_html=True)
 
-    # ════════════════════════════════════════════════
-    #  TAB: LATIH MODEL
-    # ════════════════════════════════════════════════
+    # TAB: LATIH MODEL
     if active == "latih":
-        st.markdown('<div style="font-family:JetBrains Mono,monospace;font-size:0.68rem;color:#4b5563;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;">TRAIN</div>', unsafe_allow_html=True)
-        st.markdown('<div style="font-size:1.3rem;font-weight:700;color:#e5e7eb;margin-bottom:24px;letter-spacing:-0.02em;">Latih Model PCA</div>', unsafe_allow_html=True)
-
+        st.markdown('<div style="font-size:1.3rem;font-weight:700;color:#e5e7eb;margin-bottom:24px;">Latih Model PCA</div>', unsafe_allow_html=True)
         col_form, col_alur = st.columns([3, 2], gap="large")
 
         with col_alur:
             st.markdown("""
             <div style="background:#0d0d0d;border:1px solid #1a1a1a;border-radius:10px;padding:20px 22px;">
-                <div style="font-family:'JetBrains Mono',monospace;font-size:0.65rem;color:#374151; letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px;">Pipeline</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:0.65rem;color:#6366f1; letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px;">Tips Akurasi Tinggi</div>
                 <div style="font-size:0.8rem;color:#6b7280;line-height:1.9;">
-                    <span style="color:#374151;font-family:'JetBrains Mono',monospace;">01</span>&nbsp;&nbsp; Upload foto referensi<br>
-                    <span style="color:#374151;font-family:'JetBrains Mono',monospace;">02</span>&nbsp;&nbsp; <code style="font-family:'JetBrains Mono',monospace;color:#a5b4fc;background:#111827;padding:1px 5px;border-radius:3px;">grayscale → resize → CLAHE</code><br>
-                    <span style="color:#374151;font-family:'JetBrains Mono',monospace;">03</span>&nbsp;&nbsp; <code style="font-family:'JetBrains Mono',monospace;color:#a5b4fc;background:#111827;padding:1px 5px;border-radius:3px;">Xc = X − mean_face</code><br>
-                    <span style="color:#374151;font-family:'JetBrains Mono',monospace;">04</span>&nbsp;&nbsp; <code style="font-family:'JetBrains Mono',monospace;color:#a5b4fc;background:#111827;padding:1px 5px;border-radius:3px;">SVD(Xc) → eigenfaces</code><br>
-                    <span style="color:#374151;font-family:'JetBrains Mono',monospace;">05</span>&nbsp;&nbsp; Eigenspace siap digunakan
+                    💡 Gunakan opsi <b>Dataset LFW</b> jika Anda ingin membandingkan dua wajah acak yang berbeda orang. LFW memberikan basis variasi ribuan wajah sehingga deteksi jauh lebih presisi dan toleran terhadap objek non-wajah.
                 </div>
             </div>
             """, unsafe_allow_html=True)
 
         with col_form:
-            use_lfw = st.toggle("Gunakan dataset LFW (unduh otomatis ~200MB)", value=False)
+            use_lfw = st.toggle("Gunakan dataset LFW (Sangat Direkomendasikan untuk Akurasi)", value=True)
 
             if use_lfw:
-                st.markdown('<div style="font-size:0.8rem;color:#6b7280;margin-bottom:12px;">Dataset LFW berisi ribuan foto wajah publik. Diunduh sekali, lalu ter-cache.</div>', unsafe_allow_html=True)
                 if st.button("Latih dari LFW", key="train_lfw"):
                     with st.spinner("Mengunduh & melatih PCA dari LFW..."):
                         try:
@@ -543,193 +440,105 @@ with col_content:
                             st.session_state["pca_model"]   = pca_m
                             st.session_state["mean_face"]   = mf
                             st.session_state["n_train"]     = n_tr
-                            st.session_state["model_source"] = f"LFW ({n_tr} foto)"
-                            st.success(f"Model dilatih dari {n_tr} foto LFW — k={n_components}")
+                            st.session_state["model_source"] = f"LFW (~{n_tr} foto)"
+                            st.success(f"Model berhasil dilatih dengan basis data LFW — k={n_components}")
                         except Exception as e:
                             st.error(str(e))
             else:
-                uploaded_db = st.file_uploader(
-                    "Upload foto database (minimal 3 foto, JPG/PNG)",
-                    type=["jpg","jpeg","png"],
-                    accept_multiple_files=True,
-                    key="db_uploader"
-                )
-
-                if not uploaded_db:
-                    st.markdown('<div style="font-size:0.8rem;color:#374151;margin-top:8px;">Upload foto untuk mulai pelatihan.</div>', unsafe_allow_html=True)
-                else:
-                    st.markdown(f'<div style="font-size:0.78rem;color:#6b7280;margin:8px 0 12px;">{len(uploaded_db)} foto ter-upload</div>', unsafe_allow_html=True)
-                    prev_cols = st.columns(min(len(uploaded_db), 5))
-                    db_grays  = []
-                    for i, uf in enumerate(uploaded_db):
+                uploaded_db = st.file_uploader("Upload foto database (minimal 3 foto)", type=["jpg","jpeg","png"], accept_multiple_files=True)
+                if uploaded_db:
+                    db_grays = []
+                    for uf in uploaded_db:
                         pil_i  = Image.open(uf).convert("RGB")
                         cv_i   = cv2.cvtColor(np.array(pil_i), cv2.COLOR_RGB2BGR)
-                        gray_i = cv2.cvtColor(cv_i, cv2.COLOR_BGR2GRAY)
-                        db_grays.append(gray_i)
-                        if i < 5:
-                            prev_cols[i].image(pil_i, use_container_width=True)
-
-                    if st.button("Latih Model", key="train_custom"):
-                        if len(db_grays) < 2:
-                            st.error("Minimal 2 foto untuk melatih PCA.")
-                        else:
-                            with st.spinner("Melatih model PCA..."):
-                                try:
-                                    pca_m, mf, n_tr = train_custom_pca(db_grays, n_components)
-                                    st.session_state["pca_model"]   = pca_m
-                                    st.session_state["mean_face"]   = mf
-                                    st.session_state["n_train"]     = n_tr
-                                    st.session_state["model_source"] = f"{n_tr} foto custom"
-                                    st.success(f"Model dilatih dari {n_tr} foto — k={pca_m.n_components_}")
-                                except Exception as e:
-                                    st.error(str(e))
+                        db_grays.append(cv2.cvtColor(cv_i, cv2.COLOR_BGR2GRAY))
+                    
+                    if st.button("Latih Model Custom", key="train_custom"):
+                        with st.spinner("Melatih model..."):
+                            pca_m, mf, n_tr = train_custom_pca(db_grays, n_components)
+                            st.session_state["pca_model"]   = pca_m
+                            st.session_state["mean_face"]   = mf
+                            st.session_state["n_train"]     = n_tr
+                            st.session_state["model_source"] = f"{n_tr} foto custom"
+                            st.success("Model custom siap.")
 
         if "pca_model" in st.session_state:
             pca_m = st.session_state["pca_model"]
-            mf    = st.session_state["mean_face"]
-
-            st.markdown('<hr style="border-color:#141414;margin:32px 0;">', unsafe_allow_html=True)
-            st.markdown('<div style="font-size:0.78rem;color:#4b5563;font-family:JetBrains Mono,monospace;letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px;">STATISTIK MODEL</div>', unsafe_allow_html=True)
-
+            st.markdown('<hr style="border-color:#141414;">', unsafe_allow_html=True)
             m1, m2, m3 = st.columns(3)
-            m1.metric("Sumber", st.session_state.get("model_source", "—"))
-            m2.metric("Komponen k", pca_m.n_components_)
-            total_v = np.sum(pca_m.explained_variance_ratio_) * 100
-            m3.metric("Explained Variance", f"{total_v:.1f}%")
+            m1.metric("Sumber Basis Data", st.session_state.get("model_source", "—"))
+            m2.metric("Fitur Dimensi (k)", pca_m.n_components_)
+            m3.metric("Status Whitening", "AKTIF (Ketat)")
 
-            c_ef, c_sv = st.columns(2, gap="large")
-            with c_ef:
-                st.markdown('<div style="font-size:0.75rem;color:#4b5563;margin-bottom:8px;">Eigenfaces</div>', unsafe_allow_html=True)
-                st.pyplot(fig_eigenfaces(pca_m, mf))
-            with c_sv:
-                st.markdown('<div style="font-size:0.75rem;color:#4b5563;margin-bottom:8px;">Singular Values</div>', unsafe_allow_html=True)
-                st.pyplot(fig_sv(pca_m))
-
-            st.markdown('<div style="font-size:0.75rem;color:#4b5563;margin:16px 0 8px;">Cumulative Variance</div>', unsafe_allow_html=True)
-            st.pyplot(fig_cumvar(pca_m))
-
-    # ════════════════════════════════════════════════
-    #  TAB: BANDINGKAN DUA WAJAH
-    # ════════════════════════════════════════════════
+    # TAB: BANDINGKAN DUA WAJAH
     elif active == "bandingkan":
-        st.markdown('<div style="font-family:JetBrains Mono,monospace;font-size:0.68rem;color:#4b5563;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;">COMPARE</div>', unsafe_allow_html=True)
-        st.markdown('<div style="font-size:1.3rem;font-weight:700;color:#e5e7eb;margin-bottom:24px;letter-spacing:-0.02em;">Bandingkan Dua Wajah</div>', unsafe_allow_html=True)
+        st.markdown('<div style="font-size:1.3rem;font-weight:700;color:#e5e7eb;margin-bottom:24px;">Bandingkan Dua Wajah</div>', unsafe_allow_html=True)
 
         if "pca_model" not in st.session_state:
-            st.warning("Latih model terlebih dahulu di menu Latih Model.")
+            st.warning("Silakan ke menu 'Latih Model' terlebih dahulu dan klik tombol Latih.")
             st.stop()
 
         pca_m = st.session_state["pca_model"]
         mf    = st.session_state["mean_face"]
 
-        st.markdown('<div style="font-size:0.83rem;color:#4b5563;margin-bottom:20px;">Upload dua foto wajah — misalnya foto masa kecil vs dewasa.</div>', unsafe_allow_html=True)
-
         up_col1, up_col2 = st.columns(2, gap="large")
         with up_col1:
-            st.markdown('<div style="font-size:0.75rem;color:#6b7280;margin-bottom:6px;">Foto 1</div>', unsafe_allow_html=True)
-            up1 = st.file_uploader("Foto 1", type=["jpg","jpeg","png"], key="up1", label_visibility="collapsed")
+            up1 = st.file_uploader("Foto 1", type=["jpg","jpeg","png"], key="up1")
         with up_col2:
-            st.markdown('<div style="font-size:0.75rem;color:#6b7280;margin-bottom:6px;">Foto 2</div>', unsafe_allow_html=True)
-            up2 = st.file_uploader("Foto 2", type=["jpg","jpeg","png"], key="up2", label_visibility="collapsed")
+            up2 = st.file_uploader("Foto 2", type=["jpg","jpeg","png"], key="up2")
 
-        if not up1 or not up2:
-            st.markdown('<div style="font-size:0.8rem;color:#374151;margin-top:8px;">Upload kedua foto untuk memulai perbandingan.</div>', unsafe_allow_html=True)
-        else:
-            st.markdown("<br>", unsafe_allow_html=True)
-            btn_col = st.columns([2, 1, 2])
-            with btn_col[1]:
-                run = st.button("Bandingkan", key="run_compare", use_container_width=True)
-
-            if run:
-                with st.spinner("Memproses..."):
-                    p1 = save_uploaded_to_temp(up1)
-                    p2 = save_uploaded_to_temp(up2)
-                    vec1, face1, pil1, ok1, msg1 = detect_face_preprocess(p1)
-                    vec2, face2, pil2, ok2, msg2 = detect_face_preprocess(p2)
-
-                st.markdown('<hr style="border-color:#141414;margin:24px 0;">', unsafe_allow_html=True)
-
-                pc1, pc2 = st.columns(2, gap="large")
-                with pc1:
-                    st.image(pil1, caption=up1.name, use_container_width=True)
-                    if ok1: st.success(msg1)
-                    else:   st.error(msg1)
-                with pc2:
-                    st.image(pil2, caption=up2.name, use_container_width=True)
-                    if ok2: st.success(msg2)
-                    else:   st.error(msg2)
+        if up1 and up2:
+            if st.button("Mulai Deteksi", use_container_width=True):
+                p1 = save_uploaded_to_temp(up1); p2 = save_uploaded_to_temp(up2)
+                vec1, face1, pil1, ok1, msg1 = detect_face_preprocess(p1)
+                vec2, face2, pil2, ok2, msg2 = detect_face_preprocess(p2)
 
                 if not ok1 or not ok2:
-                    st.error("Perbandingan tidak bisa dilanjutkan.")
-                    try: os.unlink(p1); os.unlink(p2)
-                    except: pass
+                    st.error(f"Gagal memproses wajah. Foto 1: {msg1} | Foto 2: {msg2}")
                     st.stop()
 
+                # Transformasi ke Eigenspace ter-whitening
                 z1f = pca_m.transform((vec1 - mf).reshape(1, -1))[0]
                 z2f = pca_m.transform((vec2 - mf).reshape(1, -1))[0]
-                k   = len(z1f)
-                sk  = min(pc_skip, k - 2)
+                
+                sk  = min(pc_skip, len(z1f) - 2)
                 z1  = z1f[sk:]; z2 = z2f[sk:]
 
                 sim  = cosine_similarity(z1, z2)
                 dist = euclidean_distance(z1, z2)
                 ssim = ssim_simple(face1, face2)
 
-                st.markdown('<div style="font-size:0.75rem;color:#4b5563;margin:20px 0 8px;">Wajah ter-crop (100×100, CLAHE)</div>', unsafe_allow_html=True)
-                cr1, cr2 = st.columns(2, gap="large")
-                cr1.image(face1, use_container_width=True, clamp=True)
-                cr2.image(face2, use_container_width=True, clamp=True)
-
-                st.markdown('<hr style="border-color:#141414;margin:24px 0;">', unsafe_allow_html=True)
-                l1 = os.path.splitext(up1.name)[0]
-                l2 = os.path.splitext(up2.name)[0]
+                st.markdown('<hr style="border-color:#141414;">', unsafe_allow_html=True)
+                c_img1, c_img2 = st.columns(2)
+                c_img1.image(face1, caption="Wajah Terdeteksi 1", use_container_width=True, clamp=True)
+                c_img2.image(face2, caption="Wajah Terdeteksi 2", use_container_width=True, clamp=True)
 
                 if sim >= threshold_cos:
                     st.markdown(f"""
                     <div class="verdict-wrap verdict-mirip">
-                        <div class="verdict-label m">MIRIP</div>
+                        <div class="verdict-label m">HASIL: ORANG YANG SAMA / MIRIP</div>
                         <div class="verdict-score m">{sim:.4f}</div>
-                        <div class="verdict-meta">cosine similarity &nbsp;|&nbsp; threshold {threshold_cos}</div>
+                        <div class="verdict-meta">Cosine Similarity lolos batas ketat ({threshold_cos})</div>
                     </div>""", unsafe_allow_html=True)
                 else:
                     st.markdown(f"""
                     <div class="verdict-wrap verdict-tidak">
-                        <div class="verdict-label t">TIDAK MIRIP</div>
+                        <div class="verdict-label t">HASIL: BERBEDA ORANG (TIDAK MIRIP)</div>
                         <div class="verdict-score t">{sim:.4f}</div>
-                        <div class="verdict-meta">cosine similarity &nbsp;|&nbsp; threshold {threshold_cos}</div>
+                        <div class="verdict-meta">Cosine Similarity berada di bawah batas ({threshold_cos})</div>
                     </div>""", unsafe_allow_html=True)
 
                 m1, m2, m3 = st.columns(3)
-                m1.metric("Cosine Similarity", f"{sim:.4f}", delta=f"{'di atas' if sim >= threshold_cos else 'di bawah'} threshold")
+                m1.metric("Cosine Similarity", f"{sim:.4f}")
                 m2.metric("Euclidean Distance", f"{dist:.2f}")
-                m3.metric("SSIM", f"{ssim:.4f}")
-
-                st.markdown('<div style="font-size:0.75rem;color:#4b5563;margin:20px 0 8px;">Proyeksi di Eigenspace</div>', unsafe_allow_html=True)
-                st.pyplot(fig_proj(z1, z2, l1, l2))
-
-                with st.expander("Detail Teknis"):
-                    st.markdown(f"""
-    | Parameter | Nilai |
-    |---|---|
-    | Sumber model | {st.session_state.get('model_source','—')} |
-    | Komponen PCA (k) | {pca_m.n_components_} |
-    | Dimensi asli | {IMG_SIZE[0]*IMG_SIZE[1]} px |
-    | Dimensi setelah PCA | {k - sk} |
-    | PC di-skip | {sk} |
-    | z₁ (5 pertama) | `{z1[:5].round(4).tolist()}` |
-    | z₂ (5 pertama) | `{z2[:5].round(4).tolist()}` |
-                    """)
-
+                m3.metric("Struktur Matriks (SSIM)", f"{ssim:.4f}")
+                
                 try: os.unlink(p1); os.unlink(p2)
                 except: pass
 
-    # ════════════════════════════════════════════════
-    #  TAB: KENALI DARI DATABASE
-    # ════════════════════════════════════════════════
+    # TAB: KENALI DARI DATABASE
     elif active == "kenali":
-        st.markdown('<div style="font-family:JetBrains Mono,monospace;font-size:0.68rem;color:#4b5563;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;">RECOGNIZE</div>', unsafe_allow_html=True)
-        st.markdown('<div style="font-size:1.3rem;font-weight:700;color:#e5e7eb;margin-bottom:24px;letter-spacing:-0.02em;">Kenali Wajah dari Database</div>', unsafe_allow_html=True)
-
+        st.markdown('<div style="font-size:1.3rem;font-weight:700;color:#e5e7eb;margin-bottom:24px;">Kenali Wajah dari Database</div>', unsafe_allow_html=True)
         if "pca_model" not in st.session_state:
             st.warning("Latih model terlebih dahulu di menu Latih Model.")
             st.stop()
@@ -737,76 +546,37 @@ with col_content:
         pca_m = st.session_state["pca_model"]
         mf    = st.session_state["mean_face"]
 
-        st.markdown('<div style="font-size:0.83rem;color:#4b5563;margin-bottom:20px;">Upload foto database (nama file = label orang), lalu upload satu foto query.</div>', unsafe_allow_html=True)
-
         kc1, kc2 = st.columns(2, gap="large")
         with kc1:
-            st.markdown('<div style="font-size:0.75rem;color:#6b7280;margin-bottom:6px;">Foto Database</div>', unsafe_allow_html=True)
-            db_files = st.file_uploader("Database", type=["jpg","jpeg","png"], accept_multiple_files=True, key="recog_db", label_visibility="collapsed")
+            db_files = st.file_uploader("Database", type=["jpg","jpeg","png"], accept_multiple_files=True)
         with kc2:
-            st.markdown('<div style="font-size:0.75rem;color:#6b7280;margin-bottom:6px;">Foto Query</div>', unsafe_allow_html=True)
-            qf = st.file_uploader("Query", type=["jpg","jpeg","png"], key="recog_query", label_visibility="collapsed")
+            qf = st.file_uploader("Foto Query (Target Pencarian)", type=["jpg","jpeg","png"])
 
         if db_files and qf:
-            st.markdown("<br>", unsafe_allow_html=True)
-            btn_c = st.columns([2, 1, 2])
-            with btn_c[1]:
-                run_r = st.button("Kenali", key="run_recog", use_container_width=True)
-
-            if run_r:
-                with st.spinner("Memproses..."):
-                    db_entries = []
-                    for uf in db_files:
-                        pt = save_uploaded_to_temp(uf)
-                        vec, face, pil, ok, msg = detect_face_preprocess(pt)
-                        label = os.path.splitext(uf.name)[0]
-                        if ok:
-                            zf  = pca_m.transform((vec - mf).reshape(1, -1))[0]
-                            sk  = min(pc_skip, len(zf) - 2)
-                            z   = zf[sk:]
-                            db_entries.append({"label": label, "z": z, "face": face})
-                        try: os.unlink(pt)
-                        except: pass
-
-                    pq = save_uploaded_to_temp(qf)
-                    vq, fq, pq_img, okq, msgq = detect_face_preprocess(pq)
-                    try: os.unlink(pq)
+            if st.button("Cari di Database", use_container_width=True):
+                db_entries = []
+                for uf in db_files:
+                    pt = save_uploaded_to_temp(uf)
+                    vec, face, pil, ok, msg = detect_face_preprocess(pt)
+                    if ok:
+                        zf = pca_m.transform((vec - mf).reshape(1, -1))[0]
+                        db_entries.append({"label": os.path.splitext(uf.name)[0], "z": zf[pc_skip:], "face": face})
+                    try: os.unlink(pt)
                     except: pass
 
-                if not okq:
-                    st.error(f"Wajah tidak terdeteksi di foto query: {msgq}")
-                    st.stop()
-                if not db_entries:
-                    st.error("Tidak ada wajah terdeteksi di database.")
-                    st.stop()
+                pq = save_uploaded_to_temp(qf)
+                vq, fq, pq_img, okq, msgq = detect_face_preprocess(pq)
+                try: os.unlink(pq)
+                except: pass
 
-                zqf = pca_m.transform((vq - mf).reshape(1, -1))[0]
-                sk  = min(pc_skip, len(zqf) - 2)
-                zq  = zqf[sk:]
+                if okq and db_entries:
+                    zq = pca_m.transform((vq - mf).reshape(1, -1))[0][pc_skip:]
+                    results = sorted([(cosine_similarity(zq, e["z"]), e) for e in db_entries], key=lambda x: x[0], reverse=True)
 
-                results = sorted([(cosine_similarity(zq, e["z"]), e) for e in db_entries], key=lambda x: x[0], reverse=True)
-
-                st.markdown('<hr style="border-color:#141414;margin:24px 0;">', unsafe_allow_html=True)
-
-                rq1, rq2 = st.columns([1, 3], gap="large")
-                rq1.image(pq_img, caption="Query", use_container_width=True)
-                best_sim, best_e = results[0]
-                if best_sim >= threshold_cos:
-                    rq2.success(f"Dikenali sebagai **{best_e['label']}** — skor {best_sim:.4f}")
-                else:
-                    rq2.error(f"Tidak ada yang cukup mirip. Skor tertinggi: {best_sim:.4f} ({best_e['label']})")
-
-                st.markdown('<div style="font-size:0.75rem;color:#4b5563;margin:24px 0 12px;">Ranking Kemiripan</div>', unsafe_allow_html=True)
-                for rank, (sv, entry) in enumerate(results[:5], 1):
-                    r1, r2, r3, r4 = st.columns([1, 2, 4, 1], gap="small")
-                    r1.image(entry["face"], use_container_width=True, clamp=True)
-                    r2.markdown(f'<div style="font-size:0.72rem;color:#374151;font-family:JetBrains Mono,monospace;padding-top:4px;">#{rank}</div>'
-                                f'<div style="font-size:0.85rem;color:#e5e7eb;font-weight:600;">{entry["label"]}</div>', unsafe_allow_html=True)
-                    r3.progress(float(max(0, sv)))
-                    verdict_t = "MIRIP" if sv >= threshold_cos else "—"
-                    r4.metric("", f"{sv:.4f}", delta=verdict_t)
-        else:
-            if not db_files:
-                st.markdown('<div style="font-size:0.8rem;color:#374151;">Upload foto database terlebih dahulu.</div>', unsafe_allow_html=True)
-            if not qf:
-                st.markdown('<div style="font-size:0.8rem;color:#374151;">Upload foto query yang ingin dikenali.</div>', unsafe_allow_html=True)
+                    st.markdown('<hr style="border-color:#141414;">', unsafe_allow_html=True)
+                    best_sim, best_e = results[0]
+                    
+                    if best_sim >= threshold_cos:
+                        st.success(f"Wajah berhasil dikenali sebagai: **{best_e['label']}** (Skor: {best_sim:.4f})")
+                    else:
+                        st.error(f"Wajah tidak terdaftar di database. Kemiripan terdekat hanya {best_sim:.4f} dengan {best_e['label']}")
