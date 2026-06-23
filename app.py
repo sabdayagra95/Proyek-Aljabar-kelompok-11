@@ -1,7 +1,7 @@
 """
 =============================================================
   DETEKSI KEMIRIPAN WAJAH — PCA / SVD  (Streamlit App)
-  UI: Sleek Black, Navbar atas, Parameter di Sidebar
+  UI: Sleek Black, Navbar atas, Parameter di Sidebar (80% Width)
 =============================================================
 """
 
@@ -28,11 +28,11 @@ st.set_page_config(
     page_title="FaceVec — Deteksi Kemiripan Wajah",
     page_icon="◈",
     layout="wide",
-    initial_sidebar_state="collapsed", # Sidebar akan tertutup secara default
+    initial_sidebar_state="expanded", # Sidebar terbuka secara default saat awal load
 )
 
 # ──────────────────────────────────────────────
-#  CSS — Sleek Black & Layout 70%
+#  CSS — Sleek Black & Layout 80%
 # ──────────────────────────────────────────────
 st.markdown("""
 <style>
@@ -61,15 +61,24 @@ html, body,
     font-family: 'Inter', sans-serif !important;
 }
 
-/* ── Remove Streamlit chrome ── */
-#MainMenu, footer, header { visibility: hidden !important; }
+/* ── Menampilkan Toggle Sidebar & Menyembunyikan Chrome Lain ── */
+[data-testid="stAppDeployButton"], #MainMenu, footer { visibility: hidden !important; }
 [data-testid="stToolbar"] { display: none !important; }
 [data-testid="stDecoration"] { display: none !important; }
 .stDeployButton { display: none !important; }
 
-/* ── Main content padding (Membuat konten 70% di tengah) ── */
+/* Membuat background header transparan agar tombol toggle bawaan streamlit melayang rapi */
+[data-testid="stHeader"] {
+    background: transparent !important;
+}
+/* Memastikan tombol toggle sidebar berwarna putih/terang agar terlihat jelas */
+[data-testid="stHeader"] button {
+    color: #ffffff !important;
+}
+
+/* ── Main content padding (Sesuai Permintaan: Diubah Menjadi Lebar 80%) ── */
 .block-container {
-    padding: 2rem 15% 4rem 15% !important; /* 15% Kiri & 15% Kanan = Sisa 70% di tengah */
+    padding: 2rem 10% 4rem 10% !important; /* 10% Kiri & 10% Kanan = Sisa 80% di tengah */
     max-width: 100% !important;
 }
 
@@ -230,13 +239,14 @@ if "pc_skip" not in st.session_state:
 IMG_SIZE = (100, 100)
 
 # ──────────────────────────────────────────────
-#  SIDEBAR (Menggantikan Modal Parameter)
+#  SIDEBAR (Menggantikan Modal Parameter & Bisa Di-collapse)
 # ──────────────────────────────────────────────
 with st.sidebar:
     st.markdown("""
     <div style="font-family:'JetBrains Mono',monospace;font-size:0.8rem;
                 color:#6366f1;letter-spacing:0.1em;text-transform:uppercase;
-                margin-bottom:20px;padding-bottom:10px;border-bottom:1px solid #1a1a1a;">
+                margin-bottom:20px;padding-bottom:10px;border-bottom:1px solid #1a1a1a;
+                padding-top: 10px;">
         ⚙️ Parameter PCA
     </div>
     """, unsafe_allow_html=True)
@@ -265,7 +275,7 @@ pc_skip       = st.session_state.pc_skip
 # ──────────────────────────────────────────────
 #  NAVBAR
 # ──────────────────────────────────────────────
-col_nav = st.columns([3, 9]) # Disesuaikan karena tombol parameter dipindah ke sidebar
+col_nav = st.columns([3, 9])
 with col_nav[0]:
     st.markdown("""
     <div style="padding: 14px 0 0 0;">
@@ -453,7 +463,7 @@ def fig_proj(z1, z2, l1, l2):
 active = st.session_state.active_tab
 
 # ────────────────────────────────────────────
-#  HERO (selalu tampil)
+#  HERO
 # ────────────────────────────────────────────
 st.markdown("""
 <div style="padding: 40px 0 30px;">
@@ -486,7 +496,6 @@ if active == "latih":
     st.markdown('<div style="font-family:JetBrains Mono,monospace;font-size:0.68rem;color:#4b5563;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;">TRAIN</div>', unsafe_allow_html=True)
     st.markdown('<div style="font-size:1.3rem;font-weight:700;color:#e5e7eb;margin-bottom:24px;letter-spacing:-0.02em;">Latih Model PCA</div>', unsafe_allow_html=True)
 
-    # Alur pipeline
     col_form, col_alur = st.columns([3, 2], gap="large")
 
     with col_alur:
@@ -562,7 +571,6 @@ if active == "latih":
                             except Exception as e:
                                 st.error(str(e))
 
-    # ── Hasil pelatihan ──
     if "pca_model" in st.session_state:
         pca_m = st.session_state["pca_model"]
         mf    = st.session_state["mean_face"]
@@ -631,7 +639,6 @@ elif active == "bandingkan":
 
             st.markdown('<hr style="border-color:#141414;margin:24px 0;">', unsafe_allow_html=True)
 
-            # Preview
             pc1, pc2 = st.columns(2, gap="large")
             with pc1:
                 st.image(pil1, caption=up1.name, use_container_width=True)
@@ -648,7 +655,6 @@ elif active == "bandingkan":
                 except: pass
                 st.stop()
 
-            # Proyeksi
             z1f = pca_m.transform((vec1 - mf).reshape(1, -1))[0]
             z2f = pca_m.transform((vec2 - mf).reshape(1, -1))[0]
             k   = len(z1f)
@@ -659,13 +665,11 @@ elif active == "bandingkan":
             dist = euclidean_distance(z1, z2)
             ssim = ssim_simple(face1, face2)
 
-            # Wajah crop
             st.markdown('<div style="font-size:0.75rem;color:#4b5563;margin:20px 0 8px;">Wajah ter-crop (100×100, CLAHE)</div>', unsafe_allow_html=True)
             cr1, cr2 = st.columns(2, gap="large")
             cr1.image(face1, use_container_width=True, clamp=True)
             cr2.image(face2, use_container_width=True, clamp=True)
 
-            # Verdict
             st.markdown('<hr style="border-color:#141414;margin:24px 0;">', unsafe_allow_html=True)
             l1 = os.path.splitext(up1.name)[0]
             l2 = os.path.splitext(up2.name)[0]
@@ -685,14 +689,12 @@ elif active == "bandingkan":
                     <div class="verdict-meta">cosine similarity &nbsp;|&nbsp; threshold {threshold_cos}</div>
                 </div>""", unsafe_allow_html=True)
 
-            # Metrik
             m1, m2, m3 = st.columns(3)
             m1.metric("Cosine Similarity", f"{sim:.4f}",
                       delta=f"{'di atas' if sim >= threshold_cos else 'di bawah'} threshold")
             m2.metric("Euclidean Distance", f"{dist:.2f}")
             m3.metric("SSIM", f"{ssim:.4f}")
 
-            # Plot proyeksi
             st.markdown('<div style="font-size:0.75rem;color:#4b5563;margin:20px 0 8px;">Proyeksi di Eigenspace</div>', unsafe_allow_html=True)
             st.pyplot(fig_proj(z1, z2, l1, l2))
 
@@ -784,7 +786,6 @@ elif active == "kenali":
 
             st.markdown('<hr style="border-color:#141414;margin:24px 0;">', unsafe_allow_html=True)
 
-            # Foto query
             rq1, rq2 = st.columns([1, 3], gap="large")
             rq1.image(pq_img, caption="Query", use_container_width=True)
             best_sim, best_e = results[0]
@@ -793,7 +794,6 @@ elif active == "kenali":
             else:
                 rq2.error(f"Tidak ada yang cukup mirip. Skor tertinggi: {best_sim:.4f} ({best_e['label']})")
 
-            # Ranking
             st.markdown('<div style="font-size:0.75rem;color:#4b5563;margin:24px 0 12px;">Ranking Kemiripan</div>', unsafe_allow_html=True)
             for rank, (sv, entry) in enumerate(results[:5], 1):
                 r1, r2, r3, r4 = st.columns([1, 2, 4, 1], gap="small")
