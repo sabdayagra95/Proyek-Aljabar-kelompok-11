@@ -1,14 +1,7 @@
 """
 =============================================================
   DETEKSI KEMIRIPAN WAJAH — PCA / SVD  (Streamlit App)
-  UI: Sleek Black, Navbar atas, Parameter sebagai popup modal
-
-  Jalankan:
-      streamlit run app.py
-
-  Requirements:
-      pip install streamlit numpy opencv-python-headless
-                  matplotlib pillow scikit-learn
+  UI: Sleek Black, Navbar atas, Parameter di Sidebar
 =============================================================
 """
 
@@ -35,11 +28,11 @@ st.set_page_config(
     page_title="FaceVec — Deteksi Kemiripan Wajah",
     page_icon="◈",
     layout="wide",
-    initial_sidebar_state="collapsed",
+    initial_sidebar_state="collapsed", # Sidebar akan tertutup secara default
 )
 
 # ──────────────────────────────────────────────
-#  CSS — Sleek Black, no sidebar
+#  CSS — Sleek Black & Layout 70%
 # ──────────────────────────────────────────────
 st.markdown("""
 <style>
@@ -51,16 +44,22 @@ st.markdown("""
 html, body,
 [data-testid="stAppViewContainer"],
 [data-testid="stAppViewBlockContainer"],
-.main, .block-container {
+.main {
     background-color: #080808 !important;
     color: #d4d4d4 !important;
     font-family: 'Inter', sans-serif !important;
 }
 
-/* ── Collapse sidebar completely ── */
-[data-testid="stSidebar"] { display: none !important; }
-[data-testid="collapsedControl"] { display: none !important; }
-section[data-testid="stSidebarContent"] { display: none !important; }
+/* ── Custom Sidebar Styling ── */
+[data-testid="stSidebar"] {
+    background-color: #0a0a0a !important;
+    border-right: 1px solid #1a1a1a !important;
+}
+[data-testid="stSidebar"] .stSlider label {
+    color: #9ca3af !important;
+    font-size: 0.82rem !important;
+    font-family: 'Inter', sans-serif !important;
+}
 
 /* ── Remove Streamlit chrome ── */
 #MainMenu, footer, header { visibility: hidden !important; }
@@ -68,26 +67,13 @@ section[data-testid="stSidebarContent"] { display: none !important; }
 [data-testid="stDecoration"] { display: none !important; }
 .stDeployButton { display: none !important; }
 
-/* ── Main content padding ── */
+/* ── Main content padding (Membuat konten 70% di tengah) ── */
 .block-container {
-    padding: 0 !important;
+    padding: 2rem 15% 4rem 15% !important; /* 15% Kiri & 15% Kanan = Sisa 70% di tengah */
     max-width: 100% !important;
 }
 
 /* ── Navbar ── */
-.navbar {
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    background: rgba(8,8,8,0.92);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid #1e1e1e;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 48px;
-    height: 60px;
-}
 .navbar-brand {
     font-family: 'JetBrains Mono', monospace;
     font-size: 1.05rem;
@@ -96,228 +82,10 @@ section[data-testid="stSidebarContent"] { display: none !important; }
     letter-spacing: 0.02em;
 }
 .navbar-brand span { color: #6366f1; }
-.navbar-links {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-}
-.nav-btn {
-    background: transparent;
-    border: none;
-    color: #6b7280;
-    font-family: 'Inter', sans-serif;
-    font-size: 0.82rem;
-    font-weight: 500;
-    letter-spacing: 0.03em;
-    padding: 6px 16px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.15s;
-    text-transform: uppercase;
-}
-.nav-btn:hover { color: #e5e7eb; background: #141414; }
-.nav-btn.active { color: #ffffff; background: #141414; }
-.nav-settings-btn {
-    background: #141414;
-    border: 1px solid #262626;
-    color: #9ca3af;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.78rem;
-    padding: 6px 14px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.15s;
-    margin-left: 16px;
-}
-.nav-settings-btn:hover { border-color: #6366f1; color: #a5b4fc; }
-
-/* ── Page wrapper ── */
-.page-wrap {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 48px 32px 80px;
-}
-
-/* ── Hero ── */
-.hero {
-    padding: 64px 0 48px;
-    border-bottom: 1px solid #141414;
-    margin-bottom: 48px;
-}
-.hero-eyebrow {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.72rem;
-    font-weight: 500;
-    color: #6366f1;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    margin-bottom: 20px;
-}
-.hero-title {
-    font-size: clamp(2.2rem, 5vw, 3.4rem);
-    font-weight: 800;
-    color: #ffffff;
-    line-height: 1.1;
-    letter-spacing: -0.03em;
-    margin-bottom: 20px;
-}
-.hero-title em {
-    font-style: normal;
-    color: transparent;
-    -webkit-text-stroke: 1px #6366f1;
-}
-.hero-sub {
-    font-size: 0.95rem;
-    color: #6b7280;
-    line-height: 1.7;
-    max-width: 560px;
-}
-.hero-sub strong { color: #9ca3af; font-weight: 500; }
-
-/* ── Stats row ── */
-.stats-row {
-    display: flex;
-    gap: 48px;
-    margin-top: 40px;
-}
-.stat-item {}
-.stat-num {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: #ffffff;
-    letter-spacing: -0.02em;
-}
-.stat-label {
-    font-size: 0.72rem;
-    color: #4b5563;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    margin-top: 2px;
-}
-
-/* ── Section heading ── */
-.sec-eyebrow {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.68rem;
-    color: #4b5563;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    margin-bottom: 8px;
-}
-.sec-title {
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: #e5e7eb;
-    margin-bottom: 24px;
-    letter-spacing: -0.02em;
-}
-
-/* ── Cards ── */
-.card {
-    background: #0d0d0d;
-    border: 1px solid #1a1a1a;
-    border-radius: 12px;
-    padding: 24px;
-    margin-bottom: 16px;
-}
-.card-sm {
-    background: #0d0d0d;
-    border: 1px solid #1a1a1a;
-    border-radius: 8px;
-    padding: 16px 20px;
-}
-
-/* ── Alur pipeline ── */
-.pipeline {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-}
-.pipe-step {
-    display: flex;
-    align-items: flex-start;
-    gap: 16px;
-    padding: 14px 0;
-    border-bottom: 1px solid #111;
-}
-.pipe-step:last-child { border-bottom: none; }
-.pipe-num {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.68rem;
-    color: #4b5563;
-    min-width: 24px;
-    padding-top: 2px;
-}
-.pipe-text {
-    font-size: 0.82rem;
-    color: #9ca3af;
-    line-height: 1.5;
-}
-.pipe-text code {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.75rem;
-    color: #a5b4fc;
-    background: #111827;
-    padding: 1px 6px;
-    border-radius: 3px;
-}
-
-/* ── Parameter popup overlay ── */
-.param-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.75);
-    z-index: 9000;
-    align-items: flex-start;
-    justify-content: flex-end;
-    padding: 72px 32px 0;
-}
-.param-overlay.open { display: flex; }
-.param-panel {
-    background: #0d0d0d;
-    border: 1px solid #222;
-    border-radius: 12px;
-    width: 320px;
-    padding: 28px;
-    box-shadow: 0 24px 80px rgba(0,0,0,0.8);
-}
-.param-panel-title {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.72rem;
-    color: #6b7280;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    margin-bottom: 20px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid #1a1a1a;
-}
-.param-row {
-    margin-bottom: 18px;
-}
-.param-label {
-    font-size: 0.78rem;
-    color: #9ca3af;
-    margin-bottom: 6px;
-    display: flex;
-    justify-content: space-between;
-}
-.param-val {
-    font-family: 'JetBrains Mono', monospace;
-    color: #6366f1;
-    font-size: 0.78rem;
-}
 
 /* ── Streamlit widget overrides ── */
-[data-testid="stSlider"] {
-    padding: 0 !important;
-}
 [data-testid="stSlider"] > div > div > div > div {
     background: #6366f1 !important;
-}
-[data-testid="stSlider"] label {
-    display: none !important;
 }
 [data-testid="stNumberInput"] input,
 [data-testid="stTextInput"] input {
@@ -448,12 +216,10 @@ hr { border: none; border-top: 1px solid #141414; margin: 32px 0; }
 """, unsafe_allow_html=True)
 
 # ──────────────────────────────────────────────
-#  SESSION STATE — active tab & params open
+#  SESSION STATE
 # ──────────────────────────────────────────────
 if "active_tab" not in st.session_state:
     st.session_state.active_tab = "latih"
-if "params_open" not in st.session_state:
-    st.session_state.params_open = False
 if "n_components" not in st.session_state:
     st.session_state.n_components = 50
 if "threshold_cos" not in st.session_state:
@@ -464,14 +230,47 @@ if "pc_skip" not in st.session_state:
 IMG_SIZE = (100, 100)
 
 # ──────────────────────────────────────────────
+#  SIDEBAR (Menggantikan Modal Parameter)
+# ──────────────────────────────────────────────
+with st.sidebar:
+    st.markdown("""
+    <div style="font-family:'JetBrains Mono',monospace;font-size:0.8rem;
+                color:#6366f1;letter-spacing:0.1em;text-transform:uppercase;
+                margin-bottom:20px;padding-bottom:10px;border-bottom:1px solid #1a1a1a;">
+        ⚙️ Parameter PCA
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.session_state.n_components = st.slider(
+        "Komponen PCA (k)", 10, 150, st.session_state.n_components, 5, key="sl_k"
+    )
+    
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    st.session_state.threshold_cos = st.slider(
+        "Threshold Cosine", 0.0, 1.0, st.session_state.threshold_cos, 0.01, key="sl_thr"
+    )
+    
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    st.session_state.pc_skip = st.slider(
+        "PC Skip (Pencahayaan)", 0, 10, st.session_state.pc_skip, 1, key="sl_skip"
+    )
+
+# Ambil nilai parameter aktif
+n_components  = st.session_state.n_components
+threshold_cos = st.session_state.threshold_cos
+pc_skip       = st.session_state.pc_skip
+
+# ──────────────────────────────────────────────
 #  NAVBAR
 # ──────────────────────────────────────────────
-col_nav = st.columns([2, 6, 2])
+col_nav = st.columns([3, 9]) # Disesuaikan karena tombol parameter dipindah ke sidebar
 with col_nav[0]:
     st.markdown("""
     <div style="padding: 14px 0 0 0;">
-        <span style="font-family:'JetBrains Mono',monospace;font-size:1rem;font-weight:500;color:#fff;">
-            Face<span style="color:#6366f1;">Vec</span>
+        <span class="navbar-brand">
+            Face<span>Vec</span>
         </span>
     </div>
     """, unsafe_allow_html=True)
@@ -479,77 +278,20 @@ with col_nav[0]:
 with col_nav[1]:
     nav1, nav2, nav3 = st.columns(3)
     with nav1:
-        if st.button("Latih Model", key="nav_latih",
-                     use_container_width=True):
+        if st.button("Latih Model", key="nav_latih", use_container_width=True):
             st.session_state.active_tab = "latih"
             st.rerun()
     with nav2:
-        if st.button("Bandingkan Wajah", key="nav_bandingkan",
-                     use_container_width=True):
+        if st.button("Bandingkan Wajah", key="nav_bandingkan", use_container_width=True):
             st.session_state.active_tab = "bandingkan"
             st.rerun()
     with nav3:
-        if st.button("Kenali dari Database", key="nav_kenali",
-                     use_container_width=True):
+        if st.button("Kenali dari Database", key="nav_kenali", use_container_width=True):
             st.session_state.active_tab = "kenali"
             st.rerun()
 
-with col_nav[2]:
-    st.markdown('<div style="padding-top:6px;">', unsafe_allow_html=True)
-    if st.button("Parameter PCA", key="toggle_params"):
-        st.session_state.params_open = not st.session_state.params_open
-        st.rerun()
-    st.markdown('</div>', unsafe_allow_html=True)
-
 st.markdown('<hr style="margin:0 0 0 0;">', unsafe_allow_html=True)
 
-# ──────────────────────────────────────────────
-#  PARAMETER POPUP (rendered inline di atas konten)
-# ──────────────────────────────────────────────
-if st.session_state.params_open:
-    with st.container():
-        st.markdown("""
-        <div style="background:#0d0d0d;border:1px solid #222;border-radius:12px;
-                    padding:24px 28px;max-width:380px;margin:12px 0 0 auto;
-                    box-shadow:0 16px 60px rgba(0,0,0,0.7);">
-            <div style="font-family:'JetBrains Mono',monospace;font-size:0.68rem;
-                        color:#4b5563;letter-spacing:0.1em;text-transform:uppercase;
-                        margin-bottom:20px;padding-bottom:10px;border-bottom:1px solid #1a1a1a;">
-                Parameter PCA
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-
-        pc_col1, pc_col2 = st.columns([3, 1])
-        with pc_col1:
-            st.markdown(f'<div style="font-size:0.78rem;color:#6b7280;margin-bottom:4px;">Komponen PCA (k) &nbsp;<span style="font-family:JetBrains Mono,monospace;color:#6366f1;">{st.session_state.n_components}</span></div>', unsafe_allow_html=True)
-            new_k = st.slider("k", 10, 150, st.session_state.n_components, 5,
-                              label_visibility="collapsed", key="sl_k")
-            if new_k != st.session_state.n_components:
-                st.session_state.n_components = new_k
-
-            st.markdown(f'<div style="font-size:0.78rem;color:#6b7280;margin-bottom:4px;margin-top:12px;">Threshold Cosine &nbsp;<span style="font-family:JetBrains Mono,monospace;color:#6366f1;">{st.session_state.threshold_cos:.2f}</span></div>', unsafe_allow_html=True)
-            new_thr = st.slider("thr", 0.0, 1.0, st.session_state.threshold_cos, 0.01,
-                                label_visibility="collapsed", key="sl_thr")
-            if new_thr != st.session_state.threshold_cos:
-                st.session_state.threshold_cos = new_thr
-
-            st.markdown(f'<div style="font-size:0.78rem;color:#6b7280;margin-bottom:4px;margin-top:12px;">PC Skip (pencahayaan) &nbsp;<span style="font-family:JetBrains Mono,monospace;color:#6366f1;">{st.session_state.pc_skip}</span></div>', unsafe_allow_html=True)
-            new_skip = st.slider("skip", 0, 10, st.session_state.pc_skip, 1,
-                                 label_visibility="collapsed", key="sl_skip")
-            if new_skip != st.session_state.pc_skip:
-                st.session_state.pc_skip = new_skip
-
-        if st.button("Tutup", key="close_params"):
-            st.session_state.params_open = False
-            st.rerun()
-
-    st.markdown("---")
-
-# Ambil nilai parameter aktif
-n_components  = st.session_state.n_components
-threshold_cos = st.session_state.threshold_cos
-pc_skip       = st.session_state.pc_skip
 
 # ──────────────────────────────────────────────
 #  UTILITAS
@@ -559,7 +301,6 @@ def save_uploaded_to_temp(uploaded_file) -> str:
     with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as f:
         f.write(uploaded_file.read())
         return f.name
-
 
 def detect_face_preprocess(path: str):
     img_cv = cv2.imread(path)
@@ -582,15 +323,12 @@ def detect_face_preprocess(path: str):
     vector        = face_norm.flatten()
     return vector, face_resized, pil_img, True, f"Terdeteksi ({x},{y}) {w}×{h}px"
 
-
 def cosine_similarity(z1, z2) -> float:
     n1 = np.linalg.norm(z1); n2 = np.linalg.norm(z2)
     return 0.0 if (n1 == 0 or n2 == 0) else float(np.dot(z1, z2) / (n1 * n2))
 
-
 def euclidean_distance(z1, z2) -> float:
     return float(np.linalg.norm(z1 - z2))
-
 
 def ssim_simple(img1, img2) -> float:
     a, b   = img1.astype(np.float64), img2.astype(np.float64)
@@ -602,7 +340,6 @@ def ssim_simple(img1, img2) -> float:
     den = (mu1**2 + mu2**2 + C1) * (s1**2 + s2**2 + C2)
     return float((num / (den + 1e-10) + 1) / 2)
 
-
 @st.cache_resource(show_spinner=False)
 def load_lfw_pca(n_comp: int):
     lfw = fetch_lfw_people(min_faces_per_person=10, resize=0.4, color=False)
@@ -611,7 +348,6 @@ def load_lfw_pca(n_comp: int):
     pca = SklearnPCA(n_components=n_comp)
     pca.fit(X - mf)
     return pca, mf, X.shape[0]
-
 
 def train_custom_pca(images_gray: list, n_comp: int):
     vecs = []
@@ -626,7 +362,6 @@ def train_custom_pca(images_gray: list, n_comp: int):
     pca = SklearnPCA(n_components=k)
     pca.fit(X - mf)
     return pca, mf, X.shape[0]
-
 
 # ── Plot helpers — dark palette ──
 DARK_FIG  = "#080808"
@@ -644,7 +379,6 @@ def _style_ax(ax, fig):
     ax.xaxis.label.set_color("#4b5563")
     ax.yaxis.label.set_color("#4b5563")
     ax.title.set_color("#9ca3af")
-
 
 def fig_eigenfaces(pca_model, mean_face, n_show=8):
     Vk   = pca_model.components_.T
@@ -667,7 +401,6 @@ def fig_eigenfaces(pca_model, mean_face, n_show=8):
     plt.tight_layout(pad=0.5)
     return fig
 
-
 def fig_cumvar(pca_model):
     ev     = pca_model.explained_variance_ratio_
     cumvar = np.cumsum(ev) * 100
@@ -683,7 +416,6 @@ def fig_cumvar(pca_model):
     plt.tight_layout()
     return fig
 
-
 def fig_sv(pca_model):
     S   = np.sqrt(pca_model.explained_variance_)
     n   = min(20, len(S))
@@ -696,7 +428,6 @@ def fig_sv(pca_model):
     ax.grid(True, linestyle="--", alpha=0.15, color="#222", axis="y")
     plt.tight_layout()
     return fig
-
 
 def fig_proj(z1, z2, l1, l2):
     fig, ax = plt.subplots(figsize=(5, 3.5))
@@ -725,13 +456,13 @@ active = st.session_state.active_tab
 #  HERO (selalu tampil)
 # ────────────────────────────────────────────
 st.markdown("""
-<div style="padding: 56px 0 40px;">
+<div style="padding: 40px 0 30px;">
     <div style="font-family:'JetBrains Mono',monospace;font-size:0.68rem;
                 color:#6366f1;letter-spacing:0.12em;text-transform:uppercase;
                 margin-bottom:16px;">
         PCA / SVD — Eigenfaces
     </div>
-    <div style="font-size:clamp(2rem,5vw,3rem);font-weight:800;color:#fff;
+    <div style="font-size:clamp(2rem,4vw,2.5rem);font-weight:800;color:#fff;
                 line-height:1.1;letter-spacing:-0.03em;margin-bottom:16px;">
         Deteksi Kemiripan<br>
         <span style="color:transparent;-webkit-text-stroke:1px #6366f1;">Wajah</span>
